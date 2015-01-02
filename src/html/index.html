@@ -1,0 +1,102 @@
+<DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="leaflet.css" />
+      <script type="text/javascript" src="leaflet.js"></script>
+    </head>
+    <body>
+      <h2>Relation 2973482 </h2>
+      <div id="map" style="width:100%; height: 600px"></div>
+
+      <script>
+        var map;
+        var ajaxRequest;
+        var plotlist;
+        var plotlayers = [];
+
+        function initmap() {
+          // set up the map
+          map = new L.Map('map');
+
+          // create the tile layer with correct attribution
+          var osmUrl = 'http://freemap.sk/T/{z}/{x}/{y}.png';
+          var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 16});
+
+          map.setView(new L.LatLng(49.2335642, 18.7401117), 16);
+          map.addLayer(osm);
+          
+          
+            
+                L.polyline([new L.LatLng(49.2335642, 18.7401117),new L.LatLng(49.2334147, 18.7400192) ], {color: 'red ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2335642, 18.7401117),new L.LatLng(49.2341959, 18.739306),new L.LatLng(49.2342388, 18.7392548),new L.LatLng(49.234714, 18.7386971),new L.LatLng(49.2349552, 18.7384145),new L.LatLng(49.2350762, 18.7382731),new L.LatLng(49.2351223, 18.7382158),new L.LatLng(49.2351727, 18.7381407) ], {color: 'green ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2351727, 18.7381407),new L.LatLng(49.2352468, 18.7380011),new L.LatLng(49.2352971, 18.7378892),new L.LatLng(49.2354109, 18.7375702),new L.LatLng(49.2354237, 18.73754) ], {color: 'red ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2354237, 18.73754),new L.LatLng(49.2353811, 18.7375028),new L.LatLng(49.2351778, 18.7372689),new L.LatLng(49.2350328, 18.7370552),new L.LatLng(49.2349458, 18.7369861) ], {color: 'green ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2349458, 18.7369861),new L.LatLng(49.2343173, 18.7366166),new L.LatLng(49.2340905, 18.7364849) ], {color: 'red ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2340905, 18.7364849),new L.LatLng(49.2339486, 18.7364012),new L.LatLng(49.2338264, 18.7363546),new L.LatLng(49.233753, 18.7363649),new L.LatLng(49.2336998, 18.7363812),new L.LatLng(49.2336532, 18.7364212),new L.LatLng(49.2335777, 18.7365944),new L.LatLng(49.2335244, 18.7368765),new L.LatLng(49.23342, 18.7372842) ], {color: 'green ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.23342, 18.7372842),new L.LatLng(49.2336237, 18.7372698),new L.LatLng(49.2336642, 18.7375862),new L.LatLng(49.2330766, 18.7388758),new L.LatLng(49.2324255, 18.7402336),new L.LatLng(49.2320515, 18.741041),new L.LatLng(49.2307419, 18.7444186),new L.LatLng(49.2300836, 18.7459538),new L.LatLng(49.2273293, 18.7517241),new L.LatLng(49.2270193, 18.7525281),new L.LatLng(49.2267993, 18.753219),new L.LatLng(49.2266044, 18.753937),new L.LatLng(49.2264544, 18.7547209),new L.LatLng(49.2262081, 18.7562089),new L.LatLng(49.2260297, 18.757892),new L.LatLng(49.225675, 18.760435),new L.LatLng(49.2255988, 18.7612023) ], {color: 'red ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2255988, 18.7612023),new L.LatLng(49.2255719, 18.7614366) ], {color: 'green ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2255719, 18.7614366),new L.LatLng(49.2255482, 18.7616566),new L.LatLng(49.2255045, 18.7626637),new L.LatLng(49.2255017, 18.7630759),new L.LatLng(49.2255042, 18.763699),new L.LatLng(49.2255627, 18.7643767),new L.LatLng(49.2256425, 18.766336),new L.LatLng(49.2256055, 18.766954),new L.LatLng(49.2254587, 18.7677604),new L.LatLng(49.225327, 18.7682496),new L.LatLng(49.225189, 18.7686554),new L.LatLng(49.2248715, 18.7692367),new L.LatLng(49.2246672, 18.7695157),new L.LatLng(49.2243718, 18.7698581),new L.LatLng(49.2241316, 18.7700716),new L.LatLng(49.2240397, 18.7701233),new L.LatLng(49.2239407, 18.770179),new L.LatLng(49.2234493, 18.7704589),new L.LatLng(49.2231256, 18.7705104),new L.LatLng(49.2220573, 18.770554),new L.LatLng(49.2216011, 18.7705557),new L.LatLng(49.2211668, 18.7705928),new L.LatLng(49.2207066, 18.7705508),new L.LatLng(49.2200254, 18.7706364),new L.LatLng(49.2192717, 18.7708732),new L.LatLng(49.2188889, 18.7710318),new L.LatLng(49.2180286, 18.7715413),new L.LatLng(49.2175376, 18.7716891),new L.LatLng(49.2169926, 18.7722696),new L.LatLng(49.2168826, 18.7724891),new L.LatLng(49.2166102, 18.7728557),new L.LatLng(49.2160498, 18.7737443),new L.LatLng(49.2154172, 18.7750469) ], {color: 'red ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2154172, 18.7750469),new L.LatLng(49.2153923, 18.7750134),new L.LatLng(49.2153543, 18.7748309),new L.LatLng(49.2153037, 18.7743774),new L.LatLng(49.2152573, 18.7741804),new L.LatLng(49.215201, 18.7740858),new L.LatLng(49.2151497, 18.7739996),new L.LatLng(49.2148485, 18.7737296) ], {color: 'green ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2148485, 18.7737296),new L.LatLng(49.2146914, 18.7741828) ], {color: 'red ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2146914, 18.7741828),new L.LatLng(49.2146163, 18.7744233) ], {color: 'green ', weight: 15}).addTo(map);   
+          
+            
+                L.polyline([new L.LatLng(49.2146163, 18.7744233),new L.LatLng(49.2145537, 18.7747494),new L.LatLng(49.2145507, 18.7751036),new L.LatLng(49.214624, 18.7755),new L.LatLng(49.2147124, 18.7757314) ], {color: 'red ', weight: 15}).addTo(map);   
+          
+            
+          
+              L.polyline([new L.LatLng(49.2335642, 18.7401117),  new L.LatLng(49.2335642, 18.7401117)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2351727, 18.7381407),  new L.LatLng(49.2351727, 18.7381407)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2354237, 18.73754),  new L.LatLng(49.2354237, 18.73754)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2349458, 18.7369861),  new L.LatLng(49.2349458, 18.7369861)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2340905, 18.7364849),  new L.LatLng(49.2340905, 18.7364849)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.23342, 18.7372842),  new L.LatLng(49.23342, 18.7372842)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2255988, 18.7612023),  new L.LatLng(49.2255988, 18.7612023)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2255719, 18.7614366),  new L.LatLng(49.2255719, 18.7614366)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2154172, 18.7750469),  new L.LatLng(49.2154172, 18.7750469)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2148485, 18.7737296),  new L.LatLng(49.2148485, 18.7737296)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2146914, 18.7741828),  new L.LatLng(49.2146914, 18.7741828)], {color: 'black', weight: 7}).addTo(map);  
+          
+              L.polyline([new L.LatLng(49.2146163, 18.7744233),  new L.LatLng(49.2146163, 18.7744233)], {color: 'black', weight: 7}).addTo(map);  
+          
+        }
+
+        initmap();
+      </script>
+    </body>
+  </html>
