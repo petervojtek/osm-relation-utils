@@ -34,7 +34,7 @@ module Osm
       out.join("\n")
     end
     
-    def interconnect_ways distance_threshold_in_metres = 10.0
+    def determine_interconnections distance_threshold_in_metres = 10.0
       $logger.info "Relation #{@osm_id}: Interconnecting ways"
       end_nodes = @ways.collect(&:end_nodes).flatten
       
