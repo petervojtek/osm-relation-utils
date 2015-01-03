@@ -4,15 +4,13 @@
          <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-      <link rel="stylesheet" type="text/css" href="leaflet.css" />
-      <script type="text/javascript" src="leaflet.js"></script>
+      <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
+      <script type="text/javascript" src="leaflet/leaflet.js"></script>
     </head>
     <body>
       <h2>Relation <%= relation.osm_id %> </h2>
       <ul>
         <li><a href="http://www.openstreetmap.org/relation/<%= relation.osm_id  %>">view original relation is OSM</a></li>
-        <li>Ways: <%= relation.ways.size %></li>
-        <li>Interconnections: <%= relation.interconnection_pairs_of_nodes.size %></li>
       </ul>
       <div id="map" style="width:100%; height: 600px"></div>
 
@@ -30,12 +28,11 @@
           var osmUrl = 'http://freemap.sk/C/{z}/{x}/{y}.png';
           var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 16});
 
-          map.setView(new L.LatLng(<%= journey.first.lat  %>, <%= journey.first.lon  %>), 16);
+          map.setView(new L.LatLng(<%= journey_points.first.lat  %>, <%= journey_points.first.lon  %>), 14);
           map.addLayer(osm);
           <% pts = []; t = 100 %>
-          <% (0..journey.size).to_a.each do |i|  %>
-            <% n1, e, n2 = journey[i], journey[i+1], journey[i+2]
-            next if e.class != Osm::Edge
+          <% (0..(journey_points.size - 2)).to_a.each do |i|  %>
+            <% n1, n2 = journey_points[i], journey_points[i+1]
             t += 30;
             i = i + 2
             l1 = "L.polyline([new L.LatLng(#{n1.lat},#{n1.lon}), new L.LatLng(#{n2.lat},#{n2.lon})], {color: 'blue', weight: 15, opacity: 0.1}).addTo(map);"

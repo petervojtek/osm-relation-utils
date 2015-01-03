@@ -4,8 +4,8 @@
          <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-      <link rel="stylesheet" type="text/css" href="leaflet.css" />
-      <script type="text/javascript" src="leaflet.js"></script>
+      <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
+      <script type="text/javascript" src="leaflet/leaflet.js"></script>
     </head>
     <body>
       <h2>Relation <%= relation.osm_id %> </h2>
@@ -27,7 +27,7 @@
           map = new L.Map('map');
 
           // create the tile layer with correct attribution
-          var osmUrl = 'http://freemap.sk/T/{z}/{x}/{y}.png';
+          var osmUrl = 'http://freemap.sk/C/{z}/{x}/{y}.png';
           var osm = new L.TileLayer(osmUrl, {minZoom: 2, maxZoom: 16});
 
           map.setView(new L.LatLng(<%= relation.ways.first.nodes.first.lat  %>, <%= relation.ways.first.nodes.first.lon  %>), 16);

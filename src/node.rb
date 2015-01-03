@@ -9,8 +9,10 @@ module Osm
     @@node_counter = 0
     
     attr_accessor :osm_id, :way, :lat, :lon, :simplified_id
-    def initialize osm_id, way
+    def initialize osm_id, way, lat, lon
       @osm_id = osm_id
+      @lat = lat.to_f
+      @lon = lon.to_f
       @way = way
       @simplified_id = @@node_counter
       @@node_counter += 1
@@ -19,16 +21,6 @@ module Osm
     
     def belongs_to_the_same_way_as? another_node
       self.way.osm_id == another_node.way.osm_id
-    end
-    
-    def load_from_osm_db
-      url = "http://www.openstreetmap.org/api/0.6/node/#{@osm_id}"
-      $logger.info "Node #{@osm_id}: downloading data from #{url}"
-      node_xml = open(url).read
-      h = Hash.from_xml node_xml
-      @lat = h['osm']['node']['lat'].to_f
-      @lon = h['osm']['node']['lon'].to_f
-      $logger.info "Node #{@osm_id}: extracted latitude:#{@lat}, longitude:#{@lon}"
     end
     
     def to_s

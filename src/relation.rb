@@ -8,24 +8,47 @@ module Osm
       $logger.info "Relation #{@osm_id}: initialized"
     end
     
-    def load_from_osm_db
-      url = "http://www.openstreetmap.org/api/0.6/relation/#{@osm_id}"
-      $logger.info "Relation #{@osm_id}: downloading data from #{url}"
-      relation_xml = open(url).read
+    def load
+      xml_filename = "relations.dump/relation-#{@osm_id}.xml"
       
+      if File.exists?(xml_filename)
+        $logger.info "Relation #{@osm_id}: loading from #{xml_filename}"
+        relation_xml = File.read xml_filename
+      else
+        url = "http://www.openstreetmap.org/api/0.6/relation/#{@osm_id}/full"
+        $logger.info "Relation #{@osm_id}: downloading data from #{url}"
+        relation_xml = open(url).read
+        File.open(xml_filename, 'wb'){|f| f.write relation_xml}
+      end
+
+      h = Hash.from_xml relation_xml
       
-      way_ids = extract_way_ids relation_xml
-      $logger.info "Relation #{@osm_id}: extracted way ids: #{way_ids}"
-      way_ids.each do |way_id|
-        w = Way.new(way_id)
-        @ways << w
-        w.load_from_osm_db
+      h_nodes = h['osm']['node']
+      h_nodes = [h_nodes] if h_nodes == Hash
+      node_osm_id_to_latlon = {}
+      h_nodes.each do |h_node|
+        node_osm_id = h_node['id']
+        lat = h_node['lat']
+        lon = h_node['lon']
+        
+        node_osm_id_to_latlon[node_osm_id] = [lat, lon]
       end
       
-    end
-    
-    def save path_to_file
-      File.open(path_to_file, 'wb'){ |f| f.write Marshal.dump(self) }
+      h_ways = h['osm']['way']
+      h_ways = [h_ways] if h_ways.class == Hash
+      h_ways.each do |h_way|
+        way_osm_id = h_way['id']
+        w = Way.new(way_osm_id)
+        h_way['nd'] = [h_way['nd']] if h_way['nd'].class == Hash
+        way_node_ids = h_way['nd'].collect{|hn| hn['ref']}
+        way_node_ids.each do |node_osm_id|
+          lat, lon = node_osm_id_to_latlon[node_osm_id]
+          w.nodes << Node.new(node_osm_id, w, lat, lon)
+        end
+        
+        @ways << w
+      end
+      
     end
     
     def to_s
@@ -57,21 +80,5 @@ module Osm
       html = ERB.new(File.read('./views/relation.html.erb')).result(binding)
       File.open("./html/relation-#{@osm_id}.html", 'wb'){|f| f.write html}
     end
-    
-    private
-    def extract_way_ids relation_xml
-      relation_hash = Hash.from_xml relation_xml
-      ways = relation_hash['osm']['relation']['member']
-      ways = [ways] if ways.class == Hash
-      way_ids = []
-      ways.each do |way|
-        if way['type'] == 'way'
-          way_id = way['ref'].to_i
-          way_ids << way_id
-        end
-      end
-      
-      return way_ids
-    end  
   end
 end

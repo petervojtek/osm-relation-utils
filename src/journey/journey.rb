@@ -1,16 +1,49 @@
 module Osm
   class Journey
-    def initialize 
+    def initialize relation
       @vertices = [] # must be 1-component graph
       @edges = []
-      @journey = []
-      @relation = nil
+      @journey_points = []
+      @relation = relation
+      
+      populate_vertices_and_edges
     end
     
-    def populate_vertices_and_edges_from relation
-      @relation = relation
-      $logger.debug "Journey: populating from relation with #{relation.ways.size} ways"
-      relation.ways.each do |way|
+    def generate_journey
+      vertex = @vertices.first
+      $logger.info "Journey.generate_journey: starting journey with vertex #{vertex}"
+      travel_to vertex, nil
+    end
+    
+    def to_html
+      journey_points = @journey_points
+      relation = @relation
+      html = ERB.new(File.read('./views/journey.html.erb')).result(binding)
+      File.open("./html/journey-#{@relation.osm_id}.html", 'wb'){|f| f.write html}
+    end
+    
+    def to_gpx
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.gpx do
+          xml.trk do
+            xml.name "Relation#{@relation.osm_id}"
+            xml.trkseg do
+              @journey_points.select{|s| s.class == Vertex}.each do |vertex|
+                xml.trkpt :lat => vertex.lat, :lon => vertex.lon
+              end
+            end
+          end
+        end
+      end
+      
+      builder.to_xml
+    end
+    
+    private
+    
+    def populate_vertices_and_edges
+      $logger.debug "Journey: populating from relation with #{@relation.ways.size} ways"
+      @relation.ways.each do |way|
         $logger.debug "populating from way (#{way.nodes.size} nodes)"
         # TODO refactor to use lisp's first/second/rest approach
         way.nodes.each_with_index do |_, i|
@@ -25,7 +58,7 @@ module Osm
       
       $logger.debug "populating vertices and nodes from interconnection_pairs_of_nodes"
       
-      relation.interconnection_pairs_of_nodes.each do |n1, n2|
+      @relation.interconnection_pairs_of_nodes.each do |n1, n2|
         v1 = create_or_find_vertex n1
         v2 = create_or_find_vertex n2
         create_or_find_edge v1, v2
@@ -60,24 +93,16 @@ module Osm
       return e
     end
     
-    def generate_journey
-      vertex = @vertices.first
-      $logger.info "Journey.generate_journey: starting journey with vertex #{vertex}"
-      travel_to vertex, nil
-    end
-    
     def travel_to vertex, edge_we_arrived_from
       if(edge_we_arrived_from) # nil if we just begin our trail
         edge_we_arrived_from.visits += 1
-        @journey << edge_we_arrived_from
-        $logger.info "adding edge #{edge_we_arrived_from} to @journey"
       end
       
       vertex.visits += 1
-      @journey << vertex
-      $logger.info "adding vertex #{vertex} to @journey"
+      @journey_points << vertex
+      $logger.info "adding vertex #{vertex} to @journey_points"
       
-      if (@vertices - @journey.select{|x| x.class == Osm::Vertex}.uniq) == []
+      if (@vertices - @journey_points.select{|x| x.class == Osm::Vertex}.uniq) == []
         $logger.info "journey finished (all vertices travelled)"
         return
       end
@@ -104,13 +129,6 @@ module Osm
         next_vertex = edge_we_will_travel_next.complementary_vertex(vertex)
         [next_vertex, edge_we_will_travel_next]
       end
-    end
-    
-    def to_html
-      journey = @journey
-      relation = @relation
-      html = ERB.new(File.read('./views/journey.html.erb')).result(binding)
-      File.open("./html/journey.html", 'wb'){|f| f.write html}
     end
   end
 end
