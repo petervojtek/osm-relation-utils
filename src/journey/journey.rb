@@ -1,5 +1,7 @@
 module Osm
   class Journey
+    @@erb_view = File.read('./views/journey.html.erb')
+    
     def initialize relation
       @vertices = [] # must be 1-component graph
       @edges = []
@@ -18,8 +20,11 @@ module Osm
     def to_html
       journey_points = @journey_points
       relation = @relation
-      html = ERB.new(File.read('./views/journey.html.erb')).result(binding)
-      File.open("./html/journey-#{@relation.osm_id}.html", 'wb'){|f| f.write html}
+      html = ERB.new(@@erb_view).result(binding)
+      html_journey_path = "journey-#{@relation.osm_id}.html"
+      File.open("./html/#{html_journey_path}", 'wb'){|f| f.write html}
+      
+      html_journey_path
     end
     
     def to_gpx
@@ -48,12 +53,8 @@ module Osm
       $logger.debug "Journey: populating from relation with #{@relation.ways.size} ways"
       @relation.ways.each do |way|
         $logger.debug "populating from way (#{way.nodes.size} nodes)"
-        # TODO refactor to use lisp's first/second/rest approach
-        way.nodes.each_with_index do |_, i|
-          next if i == (way.nodes.size - 1)
-          n1 = way.nodes[i]
+        way.nodes.each_cons(2) do |n1,n2|
           v1 = create_or_find_vertex n1
-          n2 = way.nodes[i+1]
           v2 = create_or_find_vertex n2
           create_or_find_edge v1, v2
         end

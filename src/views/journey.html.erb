@@ -35,10 +35,8 @@
           map.setView(new L.LatLng(<%= journey_points.first.lat  %>, <%= journey_points.first.lon  %>), 14);
           map.addLayer(osm);
           <% pts = []; t = 100 %>
-          <% (0..(journey_points.size - 2)).to_a.each do |i|  %>
-            <% n1, n2 = journey_points[i], journey_points[i+1]
-            t += 30;
-            i = i + 2
+          <% journey_points.each_cons(2) do |n1, n2|  %>
+            <% t += 30
             l1 = "L.polyline([new L.LatLng(#{n1.lat},#{n1.lon}), new L.LatLng(#{n2.lat},#{n2.lon})], {color: 'blue', weight: 15, opacity: 0.1}).addTo(map);"
             l2 = "setTimeout(function(){#{l1}}, #{t});"
             pts << l2

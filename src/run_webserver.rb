@@ -28,8 +28,8 @@ get '/relation/:id' do
 
   j = Osm::Journey.new r
   j.generate_journey
-  j.to_html
+  html_journey_path = j.to_html
   j.to_gpx
 
-  redirect to "journey-#{r.osm_id}.html" 
+  redirect to html_journey_path
 end

@@ -1,5 +1,7 @@
 module Osm
   class Relation
+    @@erb_view = File.read('./views/relation.html.erb')
+    
     attr_accessor :osm_id, :ways, :interconnection_pairs_of_nodes
     def initialize osm_id
       @osm_id = osm_id
@@ -77,8 +79,11 @@ module Osm
     
     def to_html
       relation = self
-      html = ERB.new(File.read('./views/relation.html.erb')).result(binding)
-      File.open("./html/relation-#{@osm_id}.html", 'wb'){|f| f.write html}
+      html = ERB.new(@@erb_view).result(binding)
+      html_file = "relation-#{@osm_id}.html"
+      File.open("./html/#{html_file}", 'wb'){|f| f.write html}
+      
+      html_file
     end
   end
 end
