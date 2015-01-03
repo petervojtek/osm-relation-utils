@@ -36,7 +36,10 @@ module Osm
         end
       end
       
-      builder.to_xml
+      gpx = builder.to_xml
+      File.open("./html/journey-#{@relation.osm_id}.gpx", 'wb'){|f| f.write gpx}
+      $logger.info "Journey: gpx published"
+      gpx
     end
     
     private
