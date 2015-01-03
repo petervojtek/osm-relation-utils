@@ -77,6 +77,11 @@ module Osm
       @journey << vertex
       $logger.info "adding vertex #{vertex} to @journey"
       
+      if (@vertices - @journey.select{|x| x.class == Osm::Vertex}.uniq) == []
+        $logger.info "journey finished (all vertices travelled)"
+        return
+      end
+      
       next_vertex, edge_we_will_travel_next = determine_next_hop vertex, edge_we_arrived_from
       if next_vertex
         travel_to next_vertex, edge_we_will_travel_next

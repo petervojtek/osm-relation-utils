@@ -29,13 +29,11 @@ module Osm
         raise "error #{self}.get_rightermost_edge_suitable_for_visit: edge #{edge_we_arrived_from} not in list of my edges"
       end
       
-      p1 = @edges.find_index edge_we_arrived_from 
-      candidates2 = @edges.rotate(p1+1)
-       
-      candidates2.each do |edge|
-        next if edge.visits == 2
-        return edge
-      end
+      e0 = @edges.find{|e| e.visits == 0}
+      return e0 if e0
+      
+      e1 = @edges.find{|e| e.visits == 1}
+      return e1 if e1
       
       $logger.info "#{self}.get_clockwise_edge_suitable_for_visit - no suitable edge found"
       return nil
