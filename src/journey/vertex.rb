@@ -29,14 +29,13 @@ module Osm
         raise "error #{self}.get_rightermost_edge_suitable_for_visit: edge #{edge_we_arrived_from} not in list of my edges"
       end
       
-      e0 = @edges.find{|e| e.visits == 0}
-      return e0 if e0
-      
-      e1 = @edges.find{|e| e.visits == 1}
-      return e1 if e1
-      
-      $logger.info "#{self}.get_clockwise_edge_suitable_for_visit - no suitable edge found"
-      return nil
+      e = @edges.sort{|a,b| a.visits <=> b.visits}.first
+      if e.visits > 10
+        # prevent us from 100% cpu utilization in case of some bug
+        return nil
+      else
+        return e
+      end
     end
     
     # http://www.rubydoc.info/gems/rails-geocoder/0.9.11/Geocoder/Calculations#bearing_between-instance_method

@@ -106,7 +106,7 @@ module Osm
       @journey_points << vertex
       $logger.info "adding vertex #{vertex} to @journey_points"
       
-      if (@vertices - @journey_points.select{|x| x.class == Osm::Vertex}.uniq) == []
+      if (@vertices - @journey_points.uniq) == []
         $logger.info "journey finished (all vertices travelled)"
         return
       end
