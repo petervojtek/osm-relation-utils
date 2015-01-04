@@ -43,6 +43,12 @@ module Osm
       end
     end
     
+    def to_s
+      "V #{@unique_id}[edges:#{edges.size}, lat:#{@lat} lon:#{@lon}]"
+    end
+    
+    private
+    
     def array_of_angles_and_arrays edges
       neighboring_vertices_and_edges = edges.collect{ |e| [e.complementary_vertex(self), e]}
       angles_and_edges = neighboring_vertices_and_edges.collect do |neigh_vertex, e|
@@ -102,10 +108,6 @@ module Osm
       else
         args.map{ |i| to_degrees(i) }
       end
-    end
-    
-    def to_s
-      "V #{@unique_id}[edges:#{edges.size}, lat:#{@lat} lon:#{@lon}]"
     end
   end
 end
