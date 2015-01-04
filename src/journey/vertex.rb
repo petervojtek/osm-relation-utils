@@ -14,17 +14,17 @@ module Osm
       $logger.debug "just created vertex: #{self}"
     end
     
-    def sort_edges_clockwise!
+    def sort_edges_counterclockwise!
       neighboring_vertices_and_edges = @edges.collect{ |e| [e.complementary_vertex(self), e]}
       angles_and_edges = neighboring_vertices_and_edges.collect do |neigh_vertex, e|
         angle = bearing_between(self.lat, self.lon, neigh_vertex.lat, neigh_vertex.lon)
         [angle, e]
       end
       
-      @edges = angles_and_edges.sort{|a,b| a[0] <=> b[0]}.collect{|angle, edge| edge}
+      @edges = angles_and_edges.sort{|a,b| b[0] <=> a[0]}.collect{|angle, edge| edge}
     end
     
-    def get_clockwise_edge_suitable_for_visit edge_we_arrived_from
+    def get_edge_suitable_for_visit edge_we_arrived_from
       unless @edges.include?(edge_we_arrived_from)
         raise "error #{self}.get_rightermost_edge_suitable_for_visit: edge #{edge_we_arrived_from} not in list of my edges"
       end

@@ -69,7 +69,7 @@ module Osm
       end
       
       @vertices.select!{|v| v.edges.size > 0}
-      @vertices.each {|v| v.sort_edges_clockwise!}
+      @vertices.each {|v| v.sort_edges_counterclockwise!}
       
       $logger.info "Journey loaded from relation #{@vertices.size} vertices and #{@edges.size} edges"
       @vertices.each {|v| $logger.debug v}
@@ -124,7 +124,7 @@ module Osm
         edge_we_will_travel_next = vertex.edges.first
         $logger.debug "determine_next_hop: edge_we_will_travel_next: #{edge_we_will_travel_next}"
       else
-        edge_we_will_travel_next = vertex.get_clockwise_edge_suitable_for_visit(edge_we_arrived_from)
+        edge_we_will_travel_next = vertex.get_edge_suitable_for_visit(edge_we_arrived_from)
       end
       
       if edge_we_will_travel_next.nil? # end of journey
