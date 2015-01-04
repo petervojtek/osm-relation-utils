@@ -69,7 +69,6 @@ module Osm
       end
       
       @vertices.select!{|v| v.edges.size > 0}
-      @vertices.each {|v| v.sort_edges_counterclockwise!}
       
       $logger.info "Journey loaded from relation #{@vertices.size} vertices and #{@edges.size} edges"
       @vertices.each {|v| $logger.debug v}

@@ -14,28 +14,48 @@ module Osm
       $logger.debug "just created vertex: #{self}"
     end
     
-    def sort_edges_counterclockwise!
-      neighboring_vertices_and_edges = @edges.collect{ |e| [e.complementary_vertex(self), e]}
-      angles_and_edges = neighboring_vertices_and_edges.collect do |neigh_vertex, e|
-        angle = bearing_between(self.lat, self.lon, neigh_vertex.lat, neigh_vertex.lon)
-        [angle, e]
-      end
-      
-      @edges = angles_and_edges.sort{|a,b| b[0] <=> a[0]}.collect{|angle, edge| edge}
-    end
-    
     def get_edge_suitable_for_visit edge_we_arrived_from
       unless @edges.include?(edge_we_arrived_from)
         raise "error #{self}.get_rightermost_edge_suitable_for_visit: edge #{edge_we_arrived_from} not in list of my edges"
       end
       
       e = @edges.sort{|a,b| a.visits <=> b.visits}.first
-      if e.visits > 10
+      
+      h = {}
+      @edges.each do |e|
+        h[e.visits] ||= []
+        h[e.visits] << e
+      end
+      
+
+      lowest_number_of_visits = h.keys.sort.first
+      edges_with_lowest_number_of_visits = h[lowest_number_of_visits]
+      
+      angle_of_edge_we_arrived_from = angle_of edge_we_arrived_from # against north
+      angles_and_edges = array_of_angles_and_arrays edges_with_lowest_number_of_visits
+      _, first_edge_right_of_edge_we_arrived_from = angles_and_edges.collect{|a, e| [a + 360, e]}.find{|angle, edge| angle > angle_of_edge_we_arrived_from}
+      
+      if first_edge_right_of_edge_we_arrived_from.visits > 5
         # prevent us from 100% cpu utilization in case of some bug
         return nil
       else
         return e
       end
+    end
+    
+    def array_of_angles_and_arrays edges
+      neighboring_vertices_and_edges = edges.collect{ |e| [e.complementary_vertex(self), e]}
+      angles_and_edges = neighboring_vertices_and_edges.collect do |neigh_vertex, e|
+        angle = bearing_between(self.lat, self.lon, neigh_vertex.lat, neigh_vertex.lon)
+        [angle, e]
+      end
+      
+      angles_and_edges
+    end
+    
+    def angle_of edge
+      lat2, lon2 = edge.complementary_vertex(self).lat, edge.complementary_vertex(self).lon
+      bearing_between(self.lat, self.lon, lat2, lon2)
     end
     
     # http://www.rubydoc.info/gems/rails-geocoder/0.9.11/Geocoder/Calculations#bearing_between-instance_method
